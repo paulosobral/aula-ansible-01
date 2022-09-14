@@ -1,0 +1,9 @@
+[interno]
+localhost 
+
+[server]
+44.200.37.254
+
+[server:vars]
+ansible_private_key_file=../tf/server.pem
+ansible_user=ubuntu

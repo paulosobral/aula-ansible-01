@@ -1,0 +1,32 @@
+---
+- hosts: server
+  become: yes
+  remote_user: ubuntu
+  tasks:
+  - name: Nginx Install 
+    apt:
+      name: nginx
+      state: present
+      update_cache: yes
+
+  - name: Template index.html personalizado
+    template:
+      src: index.html.j2
+      dest: /var/www/html/index.html
+  
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
+      
+        #  - modulo service
+        #   ----
+        #   ---
+        #  - modulo copy 
+        #  -----
+        #  handlers: 
+        #  - name: Restart
+        #    service:
+        #      name: nginx
+        #      state: restart
+        #
