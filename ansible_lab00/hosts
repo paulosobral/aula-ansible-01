@@ -2,7 +2,7 @@
 localhost 
 
 [server]
-44.200.37.254
+34.206.1.207
 
 [server:vars]
 ansible_private_key_file=../tf/server.pem

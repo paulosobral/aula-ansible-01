@@ -14,10 +14,10 @@
       src: index.html
       dest: /var/www/html/index.html
   
-  - name: restart nginx
-    service:
-      name: nginx
-      state: restarted
+  # - name: restart nginx
+  #   service:
+  #     name: nginx
+  #     state: restarted
       
         #  - modulo service
         #   ----
