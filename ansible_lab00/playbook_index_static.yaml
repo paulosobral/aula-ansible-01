@@ -9,24 +9,23 @@
       state: present
       update_cache: yes
 
+  - hostname:
+      name: web01
+
   - name: Copiando index.html personalizado
     copy:
       src: index.html
       dest: /var/www/html/index.html
-  
+    notify: Restart
+
   # - name: restart nginx
   #   service:
   #     name: nginx
   #     state: restarted
-      
-        #  - modulo service
-        #   ----
-        #   ---
-        #  - modulo copy 
-        #  -----
-        #  handlers: 
-        #  - name: Restart
-        #    service:
-        #      name: nginx
-        #      state: restart
-        #
+
+
+  handlers: 
+  - name: Restart
+    service:
+      name: nginx
+      state: restarted
