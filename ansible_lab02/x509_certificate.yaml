@@ -1,0 +1,37 @@
+---
+- name: Configurando webserver com nginx
+  hosts: localhost
+  connection: local
+#  become: true          
+#https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_selfsigned.html
+
+  tasks:
+  - name: Create private key (RSA) with password protection
+    community.crypto.openssl_privatekey:
+      path: web01.key
+      type: RSA
+   #   cipher: auto
+   #   passphrase: changeme
+
+  - name: Create certificate signing request (CSR) for self-signed certificate
+    community.crypto.openssl_csr_pipe:
+      privatekey_path: web01.key
+      common_name: web01.compute-1.amazonaws.com
+      organization_name: Impacta, Inc.
+      subject_alt_name:
+        - "DNS:www.web01.com"
+        - "DNS:docs.web01.com"
+    register: csr
+  
+  - name: Create self-signed certificate from CSR
+    community.crypto.x509_certificate:
+      path: web01.crt
+      csr_content: "{{ csr.csr }}"
+      privatekey_path: web01.key
+      provider: selfsigned
+  
+
+
+
+
+

@@ -1,0 +1,11 @@
+<html>
+<head>
+  <title>Faculdade Impacta</title>
+<body>
+  <h1>Disciplina IaC Turma 08 </h1>
+  <h2>Esse aqui eh o meu IP: {{ ansible_facts.ens5.ipv4.address  }}
+      usando Linux {{ ansible_facts.lsb.id }} versao {{ ansible_facts.lsb.release }} que tem o apelido {{ ansible_facts.lsb.codename }} </h2>
+      <p>Rodando em  {{ inventory_hostname }}</p
+ </body>
+</head>
+</html>

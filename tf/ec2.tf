@@ -14,6 +14,6 @@ resource "aws_instance" "server" {
   vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}", "${aws_security_group.allow_http.id}"]
   key_name               = aws_key_pair.server.key_name
   tags = {
-    Name = "WebServer"
+    Name = "Server"
   }
 }

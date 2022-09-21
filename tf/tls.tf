@@ -5,11 +5,11 @@ resource "tls_private_key" "ssh" {
 
 resource "local_file" "server_jammy_key" {
   content         = tls_private_key.ssh.private_key_pem
-  filename        = "server.pem"
+  filename        = "webserver.pem"
   file_permission = "0600"
 }
 
 resource "aws_key_pair" "server" {
-  key_name   = "server"
+  key_name   = "webserver"
   public_key = tls_private_key.ssh.public_key_openssh
 }

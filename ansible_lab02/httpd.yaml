@@ -1,0 +1,36 @@
+---
+- name: Server httpd
+  hosts:
+  - _webserver
+  become: true
+
+
+  tasks:
+  - name: Install PIP
+    package:
+      name: 
+      - pip
+      - docker
+      - docker.io
+      - git 
+      - vim 
+      - python3.9
+      - nodejs
+      - npm
+      - httpd
+      update_cache: yes
+      state: present 
+
+
+  - name: Install usando pip
+    pip:
+      name: 
+      - ansible
+      - docker-compose
+    
+  - name: User no grupo docker
+    user:
+      name: ubuntu
+      groups: docker
+  
+ 

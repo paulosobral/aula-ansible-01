@@ -1,0 +1,71 @@
+---
+- name: Configurando webserver com nginx
+  hosts:
+  - _webserver
+  become: true
+
+  vars:
+    tls_dir: /etc/nginx/ssl/
+    key_file: web01.key
+    cert_file: web01.crt
+    conf_file: /etc/nginx/sites-available/default
+    server_name: web01
+
+  tasks:
+  - name: Validando instalação do Nginx
+    package: # https://docs.ansible.com/ansible/2.9/modules/package_module.html#package-module
+      name: 
+      - nginx 
+      update_cache: yes
+      state: present 
+
+  - name: Copiando index.html personalizado
+    template:
+      src: files/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+  
+  - name: Copiando arquivo de configuração do nginx
+    template:
+      src: files/nginx.conf.j2
+      dest: "{{ conf_file }}" 
+    notify:
+    -  Reiniciando Nginx    
+
+  - name: Criando Diretórios para os TLS
+    file:
+      path: "{{ tls_dir }}"
+      state: directory
+      mode: '0750'
+    notify:
+    - Reiniciando Nginx
+
+  - name: Copiando Arquivos TLS
+    copy:
+      src: "{{ item }}" 
+      dest: "{{ tls_dir }}"
+      mode: '0600'
+    loop:
+      - "{{ key_file }}"
+      - "{{ cert_file }}"
+    notify: 
+    - Reiniciando Nginx
+
+  - name: Habilitando cofiguração nginx
+    file:
+      src:  /etc/nginx/sites-available/default
+      dest: /etc/nginx/sites-enabled/default           
+      state: link
+    notify:
+    -  Reiniciando Nginx    
+
+  - name: Reiniciando Nginx
+    meta: flush_handlers
+
+
+  handlers: 
+  - name: Reiniciando Nginx
+    service:
+      name: nginx
+      state: restarted
+
+

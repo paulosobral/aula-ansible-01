@@ -1,0 +1,42 @@
+---
+- name: Imagem do Ubuntu na Amazon EC2
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+
+  tasks:
+  - name: SG para https
+    amazon.aws.ec2_group:
+      name: webserver-sg
+      description: sg para aws
+      region: us-east-1
+      rules:
+        - proto: tcp
+          ports:
+          - 8080
+          - 443
+          - 22
+          cidr_ip: 0.0.0.0/0
+          rule_desc: allow all para webserver
+
+  - name: Configure and start EC2 instance
+    amazon.aws.ec2_instance:
+      name: 'webserver'
+      image_id: 'ami-0885b1f6bd170450c'
+      instance_type: 't3.small'
+      key_name: 'webserver'
+      region: 'us-east-1' # "{{ lookup('env', 'AWS_REGION') }}"
+      security_group: webserver-sg  #"{{ security_group }}"
+      network:
+        assign_public_ip: true
+      tags:
+        type: ansible
+        env: automation
+        app: webserver
+      volumes:
+        - device_name: /dev/sda1
+          ebs:
+            volume_size: 16
+            delete_on_termination: true
+      wait: true
